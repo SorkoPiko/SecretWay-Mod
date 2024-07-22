@@ -10,5 +10,12 @@
 	"name": "Secret Way",
 	"version": "v0.1.0",
 	"developer": "SorkoPiko",
-	"description": "Secret Way Mod"
+	"description": "Secret Way Mod",
+	"dependencies": [
+		{
+			"id": "alphalaneous.asyncweb",
+			"version": ">=v0.1.0-alpha.5",
+			"importance": "required"
+		}
+	]
 }
