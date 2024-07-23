@@ -8,13 +8,18 @@
 	},
 	"id": "sorkopiko.secretway",
 	"name": "Secret Way",
-	"version": "v0.1.0",
+	"version": "v0.1.1",
 	"developer": "SorkoPiko",
 	"description": "Secret Way Mod",
 	"dependencies": [
 		{
 			"id": "alphalaneous.asyncweb",
 			"version": ">=v0.1.0-alpha.5",
+			"importance": "recommended"
+		},
+		{
+			"id": "jouca.badgesapi",
+			"version": ">=v1.0.6",
 			"importance": "required"
 		}
 	]
