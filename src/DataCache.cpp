@@ -4,12 +4,14 @@
 #include <any>
 #include "DataCache.hpp"
 
+DataCache* DataCache::instance = nullptr;
+
 DataCache::DataCache() {
     std::unordered_map<int, std::vector<std::any>> cache{};
 }
 
-void DataCache::store(const int& id, const matjson::Value& data, const long long& timestamp, const long& expiration) {
-    const std::vector<std::any> array = {data, timestamp, expiration};
+void DataCache::store(const int& id, const matjson::Value& data, const long long& expiration) {
+    const std::vector<std::any> array = {data, expiration};
 
     cache[id] = array;
 }
@@ -17,11 +19,10 @@ void DataCache::store(const int& id, const matjson::Value& data, const long long
 matjson::Value DataCache::retrieve(const int& id) {
     if (const auto it = cache.find(id); it != cache.end()) {
         const auto data = it->second;
-        const auto timestamp = std::any_cast<long>(data[1]);
-        const auto expiration = std::any_cast<long>(data[2]);
+        const auto expiration = std::any_cast<long long>(data[1]);
         const auto currentTimestamp = getCurrentUnixTimestamp();
 
-        if (currentTimestamp > timestamp + expiration) {
+        if (currentTimestamp > expiration) {
             cache.erase(id);
             return nullptr;
         }

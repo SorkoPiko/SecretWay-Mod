@@ -19,7 +19,7 @@ public:
     std::unordered_map<int, std::vector<std::any>> cache{};
 
     DataCache();
-    void store(const int& id, const matjson::Value& data, const long long& timestamp, const long& expiration);
+    void store(const int& id, const matjson::Value& data, const long long& expiration);
     matjson::Value retrieve(const int& id);
 
     static long long getCurrentUnixTimestamp();

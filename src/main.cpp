@@ -42,10 +42,12 @@ class $modify(MyLevelCell, LevelCell) {
             if (const auto res = e->getValue()) {
                 if (auto data = res->json().value(); data["found"].as_bool() == true) {
                     const auto timestamp = DataCache::getCurrentUnixTimestamp();
-                    const auto expirationHeader = res->header("cache-control").value_or("max-age=3600");
+                    const auto expirationHeader = res->header("cache-control").value_or("max-age=0");
                     const auto expiration = expirationHeader.substr(expirationHeader.find("=") + 1);
-                    cache->store(m_level->m_levelID, data, timestamp, std::stol(expiration));
-                    postDownload(data);
+                    Loader::get()->queueInMainThread([this, cache, data, expiration, timestamp] {
+                        cache->store(m_level->m_levelID, data, std::stol(expiration)+timestamp);
+                        postDownload(data);
+                    });
                 } else {
                     m_fields->m_text->removeMeAndCleanup();
                     release();
@@ -60,7 +62,35 @@ class $modify(MyLevelCell, LevelCell) {
         m_fields->m_downloadListener.setFilter(req.get(URL));
     }
 
-    void postDownload(const matjson::Value& data) {
+    void createBadge() {
+        const auto badge = CCSprite::createWithSpriteFrameName("highObjectIcon_001.png");
+        float spriteSize;
+        CCPoint a;
+        const auto levelName = dynamic_cast<CCLabelBMFont*>(this->m_mainLayer->getChildByID("level-name"));
+        const auto creator = dynamic_cast<CCLabelBMFont*>(this->m_mainLayer->getChildByID("main-menu")->getChildByID("creator-name")->getChildren()->objectAtIndex(0));
+        const float text = creator->getContentWidth() / 2 * creator->getScale();
+        if ( this->m_compactView ) {
+            spriteSize = 0.80000001;
+            a = CCPoint(levelName->getContentWidth() * levelName->getScale() + text + 5.0, 0.0)+levelName->getPosition();
+        } else {
+            spriteSize = 1.0;
+            a = CCPoint(text + 2.0, -22.0)+levelName->getPosition();
+        }
+        const CCPoint offset(15.0, 0.0);
+        auto pos = CCPoint(a.x + text + spriteSize * 6, a.y - 1.0);
+        if (this->m_level->m_originalLevel.value() != 0) {
+            pos += offset;
+        }
+        if (this->m_level->m_objectCount.value() > 40000) {
+            pos += offset;
+        }
+        badge->setAnchorPoint(CCPoint(0.0, 0.5));
+        this->m_mainLayer->addChild(badge);
+        badge->setPosition(pos);
+        badge->setScale(spriteSize);
+    }
 
+    void postDownload(matjson::Value data) {
+        createBadge();
     }
 };
