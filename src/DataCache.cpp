@@ -4,30 +4,48 @@
 #include <any>
 #include "DataCache.hpp"
 
+template<>
+struct matjson::Serialize<CacheEntry> {
+    static CacheEntry from_json(const Value& value) {
+        return CacheEntry {
+            .data = value["data"].as<Value>(),
+            .expiration = value["expiration"].as<long long>()
+        };
+    }
+
+    static Value to_json(const CacheEntry& value) {
+        auto obj = Object();
+        obj["data"] = value.data;
+        obj["expiration"] = value.expiration;
+        return obj;
+    }
+};
+
 DataCache* DataCache::instance = nullptr;
 
 DataCache::DataCache() {
-    std::unordered_map<int, std::vector<std::any>> cache{};
+    std::unordered_map<int, CacheEntry> cache{};
 }
 
 void DataCache::store(const int& id, const matjson::Value& data, const long long& expiration) {
-    const std::vector<std::any> array = {data, expiration};
+    const CacheEntry array = {data, expiration};
 
     cache[id] = array;
+    Mod::get()->setSavedValue("cache", cache);
 }
 
 matjson::Value DataCache::retrieve(const int& id) {
     if (const auto it = cache.find(id); it != cache.end()) {
         const auto data = it->second;
-        const auto expiration = std::any_cast<long long>(data[1]);
         const auto currentTimestamp = getCurrentUnixTimestamp();
 
-        if (currentTimestamp > expiration) {
+        if (currentTimestamp > data.expiration) {
             cache.erase(id);
+            Mod::get()->setSavedValue("cache", cache);
             return nullptr;
         }
 
-        return std::any_cast<matjson::Value>(data[0]);
+        return data.data;
     }
     return nullptr;
 }

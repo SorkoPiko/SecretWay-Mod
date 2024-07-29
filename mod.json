@@ -8,14 +8,12 @@
 	},
 	"id": "sorkopiko.secretway",
 	"name": "Secret Way",
-	"version": "v0.1.1",
+	"version": "v0.1.2",
 	"developer": "SorkoPiko",
 	"description": "Secret Way Mod",
-	"dependencies": [
-		{
-			"id": "alphalaneous.asyncweb",
-			"version": ">=v0.1.0-alpha.5",
-			"importance": "recommended"
-		}
-	]
+	"resources": {
+		"sprites": [
+			"resources/*.png"
+		]
+	}
 }
