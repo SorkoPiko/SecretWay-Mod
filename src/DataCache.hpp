@@ -8,6 +8,7 @@ using namespace geode::prelude;
 #include <unordered_map>
 #include <matjson.hpp>
 #include <any>
+#include <unordered_map>
 
 struct CacheEntry {
     matjson::Value data;
@@ -23,6 +24,7 @@ public:
     std::unordered_map<int, CacheEntry> cache{};
 
     DataCache();
+    void init();
     void store(const int& id, const matjson::Value& data, const long long& expiration);
     matjson::Value retrieve(const int& id);
 
@@ -32,6 +34,7 @@ public:
 
         if (!instance) {
             instance = new DataCache();
+            instance->init();
         };
         return instance;
     }

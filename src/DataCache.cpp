@@ -19,12 +19,43 @@ struct matjson::Serialize<CacheEntry> {
         obj["expiration"] = value.expiration;
         return obj;
     }
+
+    static bool is_json(Value const& value) {
+        return value.is_object();
+    }
+};
+
+template<>
+struct matjson::Serialize<std::unordered_map<int, CacheEntry>> {
+    static std::unordered_map<int, CacheEntry> from_json(const Value& value) {
+        std::unordered_map<int, CacheEntry> map;
+        for (const auto& [key, val] : value.as<Object>()) {
+            map[std::stoi(key)] = val.as<CacheEntry>();
+        }
+        return map;
+    }
+
+    static Value to_json(const std::unordered_map<int, CacheEntry>& value) {
+        auto obj = Object();
+        for (const auto& [key, val] : value) {
+            obj[std::to_string(key)] = Serialize<CacheEntry>::to_json(val);
+        }
+        return obj;
+    }
+
+    static bool is_json(Value const& value) {
+        return value.is_object();
+    }
 };
 
 DataCache* DataCache::instance = nullptr;
 
 DataCache::DataCache() {
     std::unordered_map<int, CacheEntry> cache{};
+}
+
+void DataCache::init() {
+    cache = Mod::get()->getSavedValue<std::unordered_map<int, CacheEntry>>("cache");
 }
 
 void DataCache::store(const int& id, const matjson::Value& data, const long long& expiration) {
