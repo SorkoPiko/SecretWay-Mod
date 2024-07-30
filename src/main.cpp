@@ -245,7 +245,7 @@ class $modify(MyPlayLayer, PlayLayer) {
         float i = 0;
         for (const auto& route : routes) {
             const auto parent = CCNode::create();
-            parent->setID(std::format("route-{}"_spr, i));
+            parent->setID(fmt::format("route-{}"_spr, i));
             pb->addChild(parent);
             const auto start = route.start * (pbSize - 2.f) / 100.f;
             const auto end = route.end * (pbSize - 2.f) / 100.f;
