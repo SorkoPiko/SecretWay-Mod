@@ -219,9 +219,11 @@ class $modify(MyPlayLayer, PlayLayer) {
     void setupHasCompleted() {
         PlayLayer::setupHasCompleted();
 
-        const auto cache = DataCache::get();
-        if (const auto data = cache->retrieve(m_level->m_levelID); data != nullptr) {
-            drawRoutes(data);
+        if (!m_level->isPlatformer()) {
+            const auto cache = DataCache::get();
+            if (const auto data = cache->retrieve(m_level->m_levelID); data != nullptr) {
+                drawRoutes(data);
+            }
         }
     }
 
@@ -257,6 +259,10 @@ class $modify(MyPlayLayer, PlayLayer) {
             endLine->setVisible(route.end > 1 && route.end < 99);
             endLine->setID("end-line"_spr);
             parent->addChild(endLine);
+            const auto middleLine = CCLayerColor::create(m_fields->colors[i], end-start, 2.f);
+            middleLine->setPosition(CCPoint(start, 7.f));
+            endLine->setID("middle-line"_spr);
+            parent->addChild(middleLine);
             ++i;
         }
     }
