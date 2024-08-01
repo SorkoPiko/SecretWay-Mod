@@ -6,7 +6,6 @@ using namespace geode::prelude;
 class SWLayer : public Popup<matjson::Value const&>, public FLAlertLayerProtocol {
 protected:
     bool setup(matjson::Value const& data) override;
-    void update(float delta) override;
 public:
     static SWLayer* create(matjson::Value const& data);
 
