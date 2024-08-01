@@ -56,7 +56,7 @@ class $modify(SWPlayLayer, PlayLayer) {
         for (const auto& route : routes) {
             if (route.type != "normal") continue;
             const auto parent = CCNode::create();
-            parent->setID(std::format("route-{}"_spr, i));
+            parent->setID(fmt::format("route-{}"_spr, i));
             pb->addChild(parent);
             const auto start = route.start * (pbSize - 2.f) / 100.f;
             const auto end = route.end * (pbSize - 2.f) / 100.f;
