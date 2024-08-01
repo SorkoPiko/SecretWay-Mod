@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef DATACACHE_H
 #define DATACACHE_H
 

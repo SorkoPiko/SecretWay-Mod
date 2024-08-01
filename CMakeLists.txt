@@ -11,7 +11,6 @@ file(GLOB_RECURSE SOURCES
 )
 add_library(${PROJECT_NAME} SHARED
         ${SOURCES}
-        src/DataCache.hpp
 )
 
 if (NOT DEFINED ENV{GEODE_SDK})
