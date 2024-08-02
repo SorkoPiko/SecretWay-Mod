@@ -70,8 +70,11 @@ class $modify(SWLevelInfoLayer, LevelInfoLayer) {
         badge->setID("secret-way-badge"_spr);
         badge->retain();
 
-        const auto levelName = dynamic_cast<CCLabelBMFont*>(this->getChildByID("title-label"));
-        const auto creator = dynamic_cast<CCLabelBMFont*>(this->getChildByID("creator-info-menu")->getChildByID("creator-name")->getChildren()->objectAtIndex(0));
+        const auto levelName = typeinfo_cast<CCLabelBMFont*>(this->getChildByID("title-label"));
+        const auto creator = typeinfo_cast<CCLabelBMFont*>(this->getChildByID("creator-info-menu")->getChildByID("creator-name")->getChildren()->objectAtIndex(0));
+        if (!levelName || !creator) {
+            return;
+        }
         const float text = creator->getScaledContentWidth() / 2;
         CCPoint a = CCPoint(levelName->getPositionX(), levelName->getPositionY() - 26.0);
         const CCPoint offset(18.0, 0.0);

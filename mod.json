@@ -8,9 +8,9 @@
 	},
 	"id": "sorkopiko.secretways",
 	"name": "Secret Ways",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"developer": "SorkoPiko",
-	"description": "Secret Way Mod",
+	"description": "Find Secret Ways in-game!",
 	"links": {
 		"source": "https://github.com/SorkoPiko/SecretWay-Mod"
 	},
@@ -20,5 +20,12 @@
 				"resources/sheet/*.png"
 			]
 		}
-	}
+	},
+	"dependencies": [
+		{
+			"id": "geode.node-ids",
+			"version": ">=v1.13.1",
+			"importance": "required"
+		}
+	]
 }
