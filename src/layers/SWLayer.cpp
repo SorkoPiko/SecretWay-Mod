@@ -97,7 +97,7 @@ bool SWLayer::setup(matjson::Value const& data) {
     infoText->setWidth(infoBG->getScaledContentWidth() - 30.f);
     infoText->setWrappingMode(WORD_WRAP);
     infoText->setContentHeight(infoBG->getScaledContentHeight() - 20.f);
-    infoText->setPosition(infoBG->getPosition());
+    infoText->setPosition(infoBG->getPositionX() - 2.f, infoBG->getPositionY() - 2.f);
     infoText->setZOrder(1);
     m_mainLayer->addChild(infoText);
 

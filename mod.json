@@ -6,11 +6,14 @@
 		"mac": "2.206",
 		"ios": "2.206"
 	},
-	"id": "sorkopiko.secretway",
-	"name": "Secret Way",
-	"version": "v0.6.3",
+	"id": "sorkopiko.secretways",
+	"name": "Secret Ways",
+	"version": "v1.0.0",
 	"developer": "SorkoPiko",
 	"description": "Secret Way Mod",
+	"links": {
+		"source": "https://github.com/SorkoPiko/SecretWay-Mod"
+	},
 	"resources": {
 		"spritesheets": {
 			"AssetSheet": [

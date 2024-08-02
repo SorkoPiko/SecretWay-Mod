@@ -66,7 +66,7 @@ class $modify(SWLevelInfoLayer, LevelInfoLayer) {
     }
 
     void createBadge() {
-        const auto badge = CCSprite::create("badge.png"_spr);
+        const auto badge = CCSprite::createWithSpriteFrameName("badge.png"_spr);
         badge->setID("secret-way-badge"_spr);
         badge->retain();
 
@@ -93,7 +93,7 @@ class $modify(SWLevelInfoLayer, LevelInfoLayer) {
         const auto menu = getChildByID("other-menu");
 
         m_fields->m_data = data;
-        const auto s = CCSprite::create("badgeBig.png"_spr);
+        const auto s = CCSprite::createWithSpriteFrameName("badgeBig.png"_spr);
         s->setScale(0.75f);
         const auto button = CCMenuItemSpriteExtra::create(
             s,
