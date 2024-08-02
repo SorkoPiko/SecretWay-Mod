@@ -19,7 +19,7 @@ bool SWLayer::setup(matjson::Value const& data) {
     const auto winSize = CCDirector::sharedDirector()->getWinSize();
     const auto width = 300.f;
 
-    this->setZOrder(100);
+    this->setZOrder(106);
 
     this->setTitle("Secret Ways", "goldFont.fnt", 1.5f);
 
@@ -41,11 +41,15 @@ bool SWLayer::setup(matjson::Value const& data) {
     m_scrollBar->setPosition({499, 130});
     m_mainLayer->addChild(m_scrollBar);
 
+    // THE FOLLOWING CODE HAS TO BE SOME OF
+    // THE WORST I'VE EVER WRITTEN IN MY LIFE.
+    // PLEASE DON'T TAKE THIS AS AN EXAMPLE.
+
     const auto routes = Routes::convertRoutes(data["routes"].as_array());
 
     auto yPos = m_scrollLayer->getScaledContentHeight();
     auto yPos2 = 0.f;
-    auto i = data["routes"].as_array().size();
+    auto i = 1;
 
     for (const auto& route : routes) {
         auto yPosDecrease = 0.f;
@@ -53,8 +57,8 @@ bool SWLayer::setup(matjson::Value const& data) {
         parent->setAnchorPoint({0, 0});
         parent->setContentWidth(width);
         const auto desc = SimpleTextArea::create(
-            //route.desc,
-            "Lorem ipsum odor amet, consectetuer adipiscing elit. Tellus tincidunt est sociosqu nec donec magnis. Arcu amet finibus dolor semper aenean. Efficitur dapibus leo metus nisi luctus litora bibendum. Adipiscing netus semper ut et, neque condimentum placerat convallis. Platea montes laoreet congue varius justo sit elit. Rhoncus iaculis primis class netus ridiculus in. Ipsum ad dolor amet nulla efficitur sagittis accumsan commodo. Aliquet netus suspendisse consequat senectus tempus suscipit. Mattis odio per vitae posuere metus nulla. Viverra class adipiscing odio aliquam, morbi pharetra viverra. Nunc netus mus ullamcorper interdum interdum eros augue dictum. Dolor hendrerit augue lectus turpis scelerisque convallis bibendum maximus. Sit metus vitae velit felis rhoncus lectus fames mollis. Penatibus dis nec cubilia donec libero taciti tortor scelerisque. Etiam gravida mauris purus pellentesque viverra. Ante nostra duis euismod luctus vestibulum.",
+            route.desc,
+            //"Lorem ipsum odor amet, consectetuer adipiscing elit. Tellus tincidunt est sociosqu nec donec magnis. Arcu amet finibus dolor semper aenean. Efficitur dapibus leo metus nisi luctus litora bibendum. Adipiscing netus semper ut et, neque condimentum placerat convallis. Platea montes laoreet congue varius justo sit elit. Rhoncus iaculis primis class netus ridiculus in. Ipsum ad dolor amet nulla efficitur sagittis accumsan commodo. Aliquet netus suspendisse consequat senectus tempus suscipit. Mattis odio per vitae posuere metus nulla. Viverra class adipiscing odio aliquam, morbi pharetra viverra. Nunc netus mus ullamcorper interdum interdum eros augue dictum. Dolor hendrerit augue lectus turpis scelerisque convallis bibendum maximus. Sit metus vitae velit felis rhoncus lectus fames mollis. Penatibus dis nec cubilia donec libero taciti tortor scelerisque. Etiam gravida mauris purus pellentesque viverra. Ante nostra duis euismod luctus vestibulum.",
             "bigFont.fnt",
             0.6f
         );
@@ -84,18 +88,32 @@ bool SWLayer::setup(matjson::Value const& data) {
         yPosDecrease += title->getScaledContentHeight();
         parent->addChild(title);
         parent->setContentHeight(yPosDecrease);
+
+        const auto colour = CCLayerColor::create({0, 0, 0, 100}, 1, yPosDecrease);
+        colour->setAnchorPoint({0, 0});
+        colour->setPositionX(-5.f);
+        parent->addChild(colour);
+
         yPos2 += yPosDecrease;
         yPos -= yPosDecrease;
         parent->setPosition(5.f, yPos);
+
+        if (i != 1) {
+            const auto separator = CCLayerColor::create(Routes::getColor(i-1), width, 1.f);
+            separator->setPositionY(yPosDecrease - 1.f);
+            parent->addChild(separator);
+        }
+
+        if (i != routes.size()) {
+            yPos2 += 5.f;
+            yPos -= 5.f;
+        }
         m_scrollLayer->m_contentLayer->addChild(parent);
         m_routes.push_back(parent);
-        --i;
+        ++i;
     }
 
-    m_scrollLayer->m_contentLayer->setAnchorPoint({0, 1});
     m_scrollLayer->m_contentLayer->setContentSize({width, std::max(m_scrollLayer->getScaledContentHeight(), yPos2)});
-    m_scrollLayer->m_contentLayer->setPositionY(m_scrollLayer->getScaledContentHeight()-m_scrollLayer->m_contentLayer->getScaledContentHeight());
-    m_scrollLayer->m_contentLayer->setVisible(true);
 
     if (m_scrollLayer->m_contentLayer->getScaledContentHeight() == m_scrollLayer->getScaledContentHeight()) {
         for (const auto route : m_routes) {
@@ -106,6 +124,8 @@ bool SWLayer::setup(matjson::Value const& data) {
             route->setPositionY(route->getPositionY() - yPos);
         }
     }
+
+    m_scrollLayer->scrollToTop();
 
     return true;
 }
