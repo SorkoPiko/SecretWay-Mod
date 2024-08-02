@@ -3,8 +3,8 @@
 using namespace geode::prelude;
 
 std::vector<ccColor4B> colors = {
-    {255, 0, 0, 255},
     {0, 255, 0, 255},
+    {255, 0, 0, 255},
     {0, 0, 255, 255},
     {255, 255, 0, 255},
     {255, 0, 255, 255},
@@ -35,7 +35,7 @@ std::vector<Route> Routes::convertRoutes(const matjson::Array& rts) {
     return routes;
 }
 
-ccColor4B Routes::getColor(const int& i) {
+ccColor4B Routes::getColour(const int& i) {
     return colors[i % colors.size()];
 }
 

@@ -8,12 +8,14 @@
 	},
 	"id": "sorkopiko.secretway",
 	"name": "Secret Way",
-	"version": "v0.5.4",
+	"version": "v0.6.3",
 	"developer": "SorkoPiko",
 	"description": "Secret Way Mod",
 	"resources": {
-		"sprites": [
-			"resources/*.png"
-		]
+		"spritesheets": {
+			"AssetSheet": [
+				"resources/sheet/*.png"
+			]
+		}
 	}
 }

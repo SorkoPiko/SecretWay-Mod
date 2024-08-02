@@ -1,4 +1,5 @@
 #include "../utils/Routes.hpp"
+#include <Geode/utils/web.hpp>
 #include "SWLayer.hpp"
 
 using namespace geode::prelude;
@@ -17,7 +18,7 @@ SWLayer* SWLayer::create(matjson::Value const& data) {
 
 bool SWLayer::setup(matjson::Value const& data) {
     const auto winSize = CCDirector::sharedDirector()->getWinSize();
-    const auto width = 300.f;
+    constexpr auto width = 300.f;
 
     this->setZOrder(106);
 
@@ -26,8 +27,6 @@ bool SWLayer::setup(matjson::Value const& data) {
     m_bg = CCScale9Sprite::create("GJ_square05.png", {0,0, 80, 80});
     m_bg->setContentSize({m_size.width / 1.6f, m_size.height / 1.25f});
     m_bg->setPosition({winSize.width / 2 + 60.f, winSize.height / 2 - 30.f});
-    m_bg->setOpacity(100);
-    m_bg->setZOrder(10);
     m_mainLayer->addChild(m_bg);
 
     m_scrollLayer = ScrollLayer::create({m_size.width / 1.6f - 20.f, m_size.height / 1.25f - 20.f});
@@ -41,11 +40,70 @@ bool SWLayer::setup(matjson::Value const& data) {
     m_scrollBar->setPosition({499, 130});
     m_mainLayer->addChild(m_scrollBar);
 
+    const auto routes = Routes::convertRoutes(data["routes"].as_array());
+
+    const auto routesText = CCLabelBMFont::create(fmt::format("Routes: {}", routes.size()).c_str(), "bigFont.fnt");
+    routesText->limitLabelWidth(100.f, 0.7f, 0.7f);
+    routesText->setAnchorPoint({0, 0.5});
+    routesText->setPosition(20, 220);
+    this->m_mainLayer->addChild(routesText);
+
+    auto maxSkippablePercent = Routes::getHighestSkippable(routes);
+    std::string maxSkippable;
+    if (maxSkippablePercent == 0) {
+        maxSkippable = "Max Skippable: ???";
+    } else {
+        maxSkippable = fmt::format("Max Skippable: {}%", maxSkippablePercent);
+    }
+
+    const auto maxSkippableText = CCLabelBMFont::create(maxSkippable.c_str(), "goldFont.fnt");
+    maxSkippableText->limitLabelWidth(100.f, 0.6f, 0.6f);
+    maxSkippableText->setAnchorPoint({0, 0.5});
+    maxSkippableText->setPosition(20, 190);
+    this->m_mainLayer->addChild(maxSkippableText);
+
+    m_srcLink = data["src"].as_string();
+    const auto srcSprite = CCSprite::createWithSpriteFrameName("sheets.png"_spr);
+    const auto srcButton = CCMenuItemSpriteExtra::create(
+        srcSprite,
+        this,
+        menu_selector(SWLayer::onSource)
+    );
+    srcButton->setPosition(30, 30);
+    this->m_buttonMenu->addChild(srcButton);
+
+    if (!data["yt"].as_string().empty()) {
+        m_ytLink = fmt::format("https://youtu.be/", data["yt"].as_string());
+        const auto ytSprite = CCSprite::createWithSpriteFrameName("gj_ytIcon_001.png");
+        const auto ytButton = CCMenuItemSpriteExtra::create(
+            ytSprite,
+            this,
+            menu_selector(SWLayer::onYouTube)
+        );
+        ytButton->setPosition(65, 30);
+        this->m_buttonMenu->addChild(ytButton);
+    }
+
+    const auto infoBG = CCScale9Sprite::create("GJ_square06.png", {0,0, 80, 80});
+    infoBG->setContentSize({m_size.width - m_size.width / 1.6f - 40.f, 100.f});
+    infoBG->setPosition({95, 115});
+    m_mainLayer->addChild(infoBG);
+
+    const auto infoText = SimpleTextArea::create(
+        "The coloured line on the left of each route is the colour of the line on the progress bar displaying the route.",
+        "bigFont.fnt",
+        0.38f
+    );
+    infoText->setWidth(infoBG->getScaledContentWidth() - 30.f);
+    infoText->setWrappingMode(WORD_WRAP);
+    infoText->setContentHeight(infoBG->getScaledContentHeight() - 20.f);
+    infoText->setPosition(infoBG->getPosition());
+    infoText->setZOrder(1);
+    m_mainLayer->addChild(infoText);
+
     // THE FOLLOWING CODE HAS TO BE SOME OF
     // THE WORST I'VE EVER WRITTEN IN MY LIFE.
     // PLEASE DON'T TAKE THIS AS AN EXAMPLE.
-
-    const auto routes = Routes::convertRoutes(data["routes"].as_array());
 
     auto yPos = m_scrollLayer->getScaledContentHeight();
     auto yPos2 = 0.f;
@@ -72,7 +130,7 @@ bool SWLayer::setup(matjson::Value const& data) {
         if (route.type == "normal") {
             infoText = fmt::format("Route: {}%-{}% (Total: {}%)", route.start, route.end, route.end-route.start);
         } else {
-            infoText = fmt::format("Route: {}", route.type);
+            infoText = fmt::format("Type: {}", route.type);
         }
         const auto info = CCLabelBMFont::create(infoText.c_str(), "goldFont.fnt");
         info->limitLabelWidth(width, 0.5f, 0.5f);
@@ -89,7 +147,7 @@ bool SWLayer::setup(matjson::Value const& data) {
         parent->addChild(title);
         parent->setContentHeight(yPosDecrease);
 
-        const auto colour = CCLayerColor::create({0, 0, 0, 100}, 1, yPosDecrease);
+        const auto colour = CCLayerColor::create(Routes::getColour(i-1), 1, yPosDecrease);
         colour->setAnchorPoint({0, 0});
         colour->setPositionX(-5.f);
         parent->addChild(colour);
@@ -99,7 +157,7 @@ bool SWLayer::setup(matjson::Value const& data) {
         parent->setPosition(5.f, yPos);
 
         if (i != 1) {
-            const auto separator = CCLayerColor::create(Routes::getColor(i-1), width, 1.f);
+            const auto separator = CCLayerColor::create({0, 0, 0, 100}, width, 1.f);
             separator->setPositionY(yPosDecrease - 1.f);
             parent->addChild(separator);
         }
@@ -128,4 +186,12 @@ bool SWLayer::setup(matjson::Value const& data) {
     m_scrollLayer->scrollToTop();
 
     return true;
+}
+
+void SWLayer::onSource(CCObject* sender) {
+    web::openLinkInBrowser(m_srcLink);
+}
+
+void SWLayer::onYouTube(CCObject* sender) {
+    web::openLinkInBrowser(m_ytLink);
 }

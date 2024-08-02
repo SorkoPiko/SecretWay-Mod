@@ -32,7 +32,7 @@ class $modify(SWPlayLayer, PlayLayer) {
             pb->addChild(parent);
             const auto start = route.start * (pbSize - 2.f) / 100.f;
             const auto end = route.end * (pbSize - 2.f) / 100.f;
-            const auto colour = Routes::getColor(i);
+            const auto colour = Routes::getColour(i);
             float y;
             if (routes.size() == 1) {
                 y = 7.f;
