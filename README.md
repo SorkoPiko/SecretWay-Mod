@@ -1,5 +1,6 @@
-# GDSW-Mod
-This is where he makes a mod.
+# Secret Way Mod
+A "simple" Geometry Dash mod that adds badges and info pages to levels with secret ways.
+It uses my own endpoint, hosted [here](http://secretway.sorkopiko.com) ([Source](https://github.com/SorkoPiko/GDSW-API)).
 
 <img src="logo.png" width="150" alt="the mod's logo" />
 
