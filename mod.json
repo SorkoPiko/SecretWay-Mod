@@ -1,5 +1,5 @@
 {
-	"geode": "3.3.0",
+	"geode": "3.4.0",
 	"gd": {
 		"win": "2.206",
 		"android": "2.206",
@@ -8,7 +8,7 @@
 	},
 	"id": "sorkopiko.secretways",
 	"name": "Secret Ways",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"developer": "SorkoPiko",
 	"description": "Find Secret Ways in-game!",
 	"links": {

@@ -63,13 +63,15 @@ class $modify(SWLevelCell, LevelCell) {
     }
 
     void createBadge() const {
+        const auto levelName = typeinfo_cast<CCLabelBMFont*>(this->m_mainLayer->getChildByID("level-name"));
+        const auto creator = typeinfo_cast<CCLabelBMFont*>(this->m_mainLayer->getChildByID("main-menu")->getChildByID("creator-name")->getChildren()->objectAtIndex(0));
+        if (!levelName || !creator) return;
         const auto badge = CCSprite::createWithSpriteFrameName("badge.png"_spr);
         badge->setID("secret-way-badge"_spr);
         badge->retain();
         float spriteSize;
         CCPoint a;
-        const auto levelName = typeinfo_cast<CCLabelBMFont*>(this->m_mainLayer->getChildByID("level-name"));
-        const auto creator = typeinfo_cast<CCLabelBMFont*>(this->m_mainLayer->getChildByID("main-menu")->getChildByID("creator-name")->getChildren()->objectAtIndex(0));
+
         const float text = creator->getScaledContentWidth() / 2;
         if ( this->m_compactView ) {
             spriteSize = 0.8;
