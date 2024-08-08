@@ -35,13 +35,11 @@ class $modify(SWLevelInfoLayer, LevelInfoLayer) {
             if (const auto res = e->getValue()) {
                 if (!res->ok()) {
                     log::warn("Request Failed");
-                    release();
                     return;
                 }
                 auto data = res->json().value();
                 if (!data.contains("found")) {
                     log::warn("Invalid Request");
-                    release();
                     return;
                 }
                 if (data["found"].as_bool() == true) {
@@ -53,11 +51,9 @@ class $modify(SWLevelInfoLayer, LevelInfoLayer) {
                         postDownload(data["data"]);
                     });
                 } else {
-                    release();
                 }
             } else if (e->isCancelled()) {
                 log::warn("Request Cancelled");
-                release();
             }
         });
 
@@ -72,7 +68,6 @@ class $modify(SWLevelInfoLayer, LevelInfoLayer) {
 
         const auto badge = CCSprite::createWithSpriteFrameName("badge.png"_spr);
         badge->setID("secret-way-badge"_spr);
-        badge->retain();
 
         const float text = creator->getScaledContentWidth() / 2;
         CCPoint a = CCPoint(levelName->getPositionX(), levelName->getPositionY() - 26.0);
@@ -88,7 +83,6 @@ class $modify(SWLevelInfoLayer, LevelInfoLayer) {
         this->addChild(badge);
         badge->setPosition(pos);
         badge->setScale(1);
-        badge->release();
     }
 
     void createButton(const matjson::Value &data) {

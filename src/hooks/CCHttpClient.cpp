@@ -1,4 +1,5 @@
 #include <Geode/modify/CCHttpClient.hpp>
+#include "../managers/Search.hpp"
 
 using namespace geode::prelude;
 
@@ -19,17 +20,14 @@ std::string httpRequestTypeToString(CCHttpRequest::HttpRequestType type) {
 
 class $modify(SWCCHttpClient, CCHttpClient) {
     static void onModify(auto& self) {
-        if (!self.setHookPriority("cocos2d::extension::CCHttpClient::send", INT_MIN)) {
+        if (!self.setHookPriority("cocos2d::extension::CCHttpClient::send", -99999)) {
             log::error("Failed to set hook priority for CCHttpClient::send");
         }
     }
 
     void send(CCHttpRequest* request) {
-        if (std::string reqUrl = "https://www.boomlings.com/database/getGJLevels21.php"; static_cast<std::string>(request->getUrl()) == reqUrl) {
-            request->setUrl("http://localhost:8000/robtop");
-        } else {
-            Mod::get()->setSavedValue("reqUrl", static_cast<std::string>(request->getUrl()));
-            log::info("{}", request->getUrl());
+        if (const std::string reqUrl = "https://www.boomlings.com/database/getGJLevels21.php"; static_cast<std::string>(request->getUrl()) == reqUrl && Search::getOn() == true) {
+            request->setUrl("https://secretway.sorkopiko.com/robtop");
         }
         CCHttpClient::send(request);
     }

@@ -73,7 +73,7 @@ bool SWLayer::setup(matjson::Value const& data) {
     this->m_buttonMenu->addChild(srcButton);
 
     if (!data["yt"].as_string().empty()) {
-        m_ytLink = fmt::format("https://youtu.be/", data["yt"].as_string());
+        m_ytLink = fmt::format("https://youtu.be/{}", data["yt"].as_string());
         const auto ytSprite = CCSprite::createWithSpriteFrameName("gj_ytIcon_001.png");
         const auto ytButton = CCMenuItemSpriteExtra::create(
             ytSprite,

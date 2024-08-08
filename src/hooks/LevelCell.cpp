@@ -68,7 +68,6 @@ class $modify(SWLevelCell, LevelCell) {
         if (!levelName || !creator) return;
         const auto badge = CCSprite::createWithSpriteFrameName("badge.png"_spr);
         badge->setID("secret-way-badge"_spr);
-        badge->retain();
         float spriteSize;
         CCPoint a;
 
@@ -92,6 +91,5 @@ class $modify(SWLevelCell, LevelCell) {
         this->m_mainLayer->addChild(badge);
         badge->setPosition(pos);
         badge->setScale(spriteSize);
-        badge->release();
     }
 };
