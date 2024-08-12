@@ -31,6 +31,6 @@ class $modify(SWLevelSearchLayer, LevelSearchLayer) {
     void toggleSearch(CCObject* sender) {
         const auto toggle = typeinfo_cast<CCMenuItemToggler*>(sender);
         Search::setOn(toggle->isOn());
-        GameLevelManager::sharedState()->m_timerDict->removeAllObjects();
+        //GameLevelManager::sharedState()->m_timerDict->removeAllObjects();
     }
 };

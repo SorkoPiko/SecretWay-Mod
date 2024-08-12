@@ -27,7 +27,7 @@ class $modify(SWCCHttpClient, CCHttpClient) {
 
     void send(CCHttpRequest* request) {
         if (const std::string reqUrl = "https://www.boomlings.com/database/getGJLevels21.php"; static_cast<std::string>(request->getUrl()) == reqUrl && Search::getOn() == true) {
-            request->setUrl("https://secretway.sorkopiko.com/robtop");
+            request->setUrl("https://secretway.sorkopiko.com/api/robtop");
         }
         CCHttpClient::send(request);
     }

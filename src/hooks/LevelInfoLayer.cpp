@@ -29,7 +29,7 @@ class $modify(SWLevelInfoLayer, LevelInfoLayer) {
             return;
         }
 
-        const std::string URL = fmt::format("http://secretway.sorkopiko.com/secretway/{}",static_cast<int>(m_level->m_levelID));
+        const std::string URL = fmt::format("http://secretway.sorkopiko.com/api/secretway/{}",static_cast<int>(m_level->m_levelID));
 
         m_fields->m_downloadListener.bind([this, cache] (web::WebTask::Event* e) {
             if (const auto res = e->getValue()) {

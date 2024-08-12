@@ -3,7 +3,7 @@
 
 using namespace geode::prelude;
 
-class SWLayer : public Popup<matjson::Value const&>, public FLAlertLayerProtocol {
+class SWLayer final : public Popup<matjson::Value const&>, public FLAlertLayerProtocol {
 protected:
     bool setup(matjson::Value const& data) override;
 public:
